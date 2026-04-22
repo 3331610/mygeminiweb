@@ -25,10 +25,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build
+      - - name: Build
         run: npm run build
         env:
-          # 这一行最关键：让机器人从刚才的 Settings 里读取这个 Key
+          # 注意：下面这一行是灵魂！它把网页上的 Secret 注入到打包过程中
+          VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # 如果你的代码里用的是 process.env.GEMINI_API_KEY，就再加一行：
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Setup Pages
