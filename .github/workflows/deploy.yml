@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: 'main'
 
 permissions:
   contents: read
@@ -10,13 +10,13 @@ permissions:
   id-token: write
 
 jobs:
-  build-and-deploy:
+  build_site:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -25,22 +25,26 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - - name: Build
+      - name: Build
+        # 这里的 env 配置是解决白屏的关键！
         run: npm run build
         env:
-          # 注意：下面这一行是灵魂！它把网页上的 Secret 注入到打包过程中
-          VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          # 如果你的代码里用的是 process.env.GEMINI_API_KEY，就再加一行：
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
+      - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          # 确保这里的路径和你打包出来的文件夹名字一致（通常是 dist）
+          path: 'dist/'
 
-      - name: Deploy to GitHub Pages
+  deploy:
+    needs: build_site
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
