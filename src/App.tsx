@@ -31,7 +31,7 @@ import {
   AreaChart,
   Area
 } from 'recharts';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'motion/react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -323,7 +323,8 @@ export default function App() {
                       </div>
                     </div>
                     
-                    <div className="h-72 w-full">
+                    {/* 修改点 1：添加 style 确保图表有高度 */}
+                    <div className="h-72 w-full" style={{ minHeight: '300px' }}>
                       {stats.dailyTrends.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                           <AreaChart data={stats.dailyTrends}>
@@ -406,7 +407,8 @@ export default function App() {
 
                     <section className="card-natural p-8">
                       <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] opacity-60 mb-8">数值离散度 / Variance</h2>
-                      <div className="h-52">
+                      {/* 修改点 2：添加 style 确保图表有高度 */}
+                      <div className="h-52" style={{ minHeight: '200px' }}>
                          <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={stats.personalRanks.slice(0, 8)}>
                               <Tooltip 
@@ -645,10 +647,8 @@ export default function App() {
         <div>接龙解析统计引擎 v4.0.1 / NATURAL ANALYTICS</div>
         <div className="flex gap-6">
           <span className="flex items-center gap-1.5"><Zap className="w-3 h-3 fill-current" /> SYSTEM OPTIMAL</span>
-          <span>Last Sync: {new Date().toLocaleTimeString()}</span>
         </div>
       </footer>
     </div>
   );
 }
-
