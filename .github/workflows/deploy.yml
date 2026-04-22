@@ -27,6 +27,9 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # 这一行最关键：让机器人从刚才的 Settings 里读取这个 Key
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
